@@ -31,3 +31,14 @@ double calcularTotal(List<Gasto> gastos) {
   }
   return total;
 }
+
+// soma os gastos de uma única categoria (usado no subtotal por categoria)
+double calcularSubtotal(List<Gasto> gastos, CategoryType categoria) {
+  double total = 0.0;
+  for (var gasto in gastos) {
+    if (gasto.categoria == categoria) {
+      total = total + gasto.valor;
+    }
+  }
+  return total;
+}
