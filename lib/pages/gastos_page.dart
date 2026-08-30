@@ -1,6 +1,8 @@
 import 'package:contador_de_gastos/enum/gasto.dart';
 import 'package:contador_de_gastos/enum/category_type.dart';
 import 'package:flutter/material.dart';
+import 'package:contador_de_gastos/widgets/gasto_card.dart';
+import 'package:contador_de_gastos/pages/historico_page.dart';
 
 class GastosPage extends StatefulWidget {
   const GastosPage({super.key});
@@ -57,6 +59,19 @@ class _GastosPageState extends State<GastosPage> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.lightBlue,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HistoricoPage(gastos: gastos),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -103,28 +118,11 @@ class _GastosPageState extends State<GastosPage> {
                 itemCount: gastos.length,
                 itemBuilder: (context, index) {
                   final gasto = gastos[index];
-                  return Container(
-                    padding: const EdgeInsets.all(12),
-                    margin: const EdgeInsets.symmetric(vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.black12,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "${gasto.descricao} - ${gasto.categoria.label} - R\$ ${gasto.valor.toStringAsFixed(2)}",
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            removerGasto(index);
-                          },
-                        ),
-                      ],
-                    ),
+                  return GastoCard(
+                    gasto: gasto,
+                    onDelete: () {
+                      removerGasto(index);
+                    },
                   );
                 },
               ),
