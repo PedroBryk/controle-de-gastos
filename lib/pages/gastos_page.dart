@@ -49,14 +49,22 @@ class _GastosPageState extends State<GastosPage> {
     });
   }
 
-// aqui começa a tela principal: formulário de novo gasto + lista de gastos cadastrados
+  // aqui começa a tela principal: formulário de novo gasto + lista de gastos cadastrados
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Contador de Gastos",
-          style: TextStyle(fontWeight: FontWeight.bold),
+        centerTitle: true,
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.account_balance_wallet),
+            SizedBox(width: 8),
+            Text(
+              "Contador de Gastos",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
         backgroundColor: Colors.lightBlue,
         actions: [
@@ -79,39 +87,78 @@ class _GastosPageState extends State<GastosPage> {
           children: [
             TextField(
               controller: descricaoController,
-              decoration: const InputDecoration(labelText: "Descrição"),
+              decoration: const InputDecoration(
+                labelText: "Descrição",
+                prefixIcon: Icon(Icons.edit_note),
+              ),
             ),
             const SizedBox(height: 10),
             TextField(
               controller: valorController,
-              decoration: const InputDecoration(labelText: "Valor"),
+              decoration: const InputDecoration(
+                labelText: "Valor",
+                prefixIcon: Icon(Icons.attach_money),
+              ),
               keyboardType: TextInputType.number,
             ),
-            const SizedBox(height: 10),
-            DropdownButton<CategoryType>(
-              value: categoriaSelecionada,
-              items: CategoryType.values.map((categoria) {
-                return DropdownMenuItem(
-                  value: categoria,
-                  child: Text(categoria.label),
-                );
-              }).toList(),
-              onChanged: (novaCategoria) {
-                setState(() {
-                  categoriaSelecionada = novaCategoria!;
-                });
-              },
+            const SizedBox(height: 28),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                DropdownButton<CategoryType>(
+                  value: categoriaSelecionada,
+                  items: CategoryType.values.map((categoria) {
+                    return DropdownMenuItem(
+                      value: categoria,
+                      child: Text(categoria.label),
+                    );
+                  }).toList(),
+                  onChanged: (novaCategoria) {
+                    setState(() {
+                      categoriaSelecionada = novaCategoria!;
+                    });
+                  },
+                ),
+                ElevatedButton(
+                  onPressed: adicionarGasto,
+                  child: const Text("Adicionar Gasto"),
+                ),
+                Text(
+                  "Total: R\$ ${calcularTotal(gastos).toStringAsFixed(2)}",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: adicionarGasto,
-              child: const Text("Adicionar Gasto"),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "Total: R\$ ${calcularTotal(gastos).toStringAsFixed(2)}",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
+            const SizedBox(height: 32),
+            ...CategoryType.values.map((categoria) {
+              final subtotal = calcularSubtotal(gastos, categoria);
+              final total = calcularTotal(gastos);
+              final percentual = total > 0 ? subtotal / total : 0.0;
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  children: [
+                    SizedBox(width: 90, child: Text(categoria.label)),
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: LinearProgressIndicator(
+                          value: percentual,
+                          backgroundColor: categoria.cor.withOpacity(0.15),
+                          color: categoria.cor,
+                          minHeight: 10,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text("${(percentual * 100).toStringAsFixed(0)}%"),
+                  ],
+                ),
+              );
+            }),
             const SizedBox(height: 10),
             Expanded(
               child: ListView.builder(

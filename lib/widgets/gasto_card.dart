@@ -19,11 +19,14 @@ class GastoCard extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.black12,
-        borderRadius: BorderRadius.circular(10),
+        color: gasto.categoria.cor.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: gasto.categoria.cor, width: 1.5),
       ),
       child: Row(
         children: [
+          Icon(gasto.categoria.icone, color: gasto.categoria.cor),
+          const SizedBox(width: 10),
           Expanded(
             child: Text(
               "${gasto.descricao} - ${gasto.categoria.label} - R\$ ${gasto.valor.toStringAsFixed(2)}",
