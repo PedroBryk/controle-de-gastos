@@ -19,22 +19,21 @@ class HistoricoPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: gastos.isEmpty
-              ? const [
-                  Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Text("Nenhum gasto registrado."),
-                  ),
-                ]
-              : gastos
-                  .map(
-                    (gasto) => GastoCard(
-                      gasto: gasto,
-                      onDelete: () {},
-                      showDelete: false, // histórico não exclui, só exibe
-                    ),
-                  )
-                  .toList(),
+          children: [
+            if (gastos.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(20),
+                child: Text("Nenhum gasto registrado."),
+              )
+            else
+              ...gastos.map(
+                (gasto) => GastoCard(
+                  gasto: gasto,
+                  onDelete: () {},
+                  showDelete: false, // histórico não exclui, só exibe
+                ),
+              ),
+          ],
         ),
       ),
     );
