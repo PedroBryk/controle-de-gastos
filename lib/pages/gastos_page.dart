@@ -3,6 +3,7 @@ import 'package:contador_de_gastos/enum/category_type.dart';
 import 'package:flutter/material.dart';
 import 'package:contador_de_gastos/widgets/gasto_card.dart';
 import 'package:contador_de_gastos/pages/historico_page.dart';
+import 'package:contador_de_gastos/pages/subtotais_page.dart';
 
 class GastosPage extends StatefulWidget {
   const GastosPage({super.key});
@@ -69,6 +70,17 @@ class _GastosPageState extends State<GastosPage> {
         backgroundColor: Colors.lightBlue,
         actions: [
           IconButton(
+            icon: const Icon(Icons.pie_chart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SubtotaisPage(gastos: gastos),
+                ),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.history),
             onPressed: () {
               Navigator.push(
@@ -132,33 +144,6 @@ class _GastosPageState extends State<GastosPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 32),
-            ...CategoryType.values.map((categoria) {
-              final subtotal = calcularSubtotal(gastos, categoria);
-              final total = calcularTotal(gastos);
-              final percentual = total > 0 ? subtotal / total : 0.0;
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  children: [
-                    SizedBox(width: 90, child: Text(categoria.label)),
-                    Expanded(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: LinearProgressIndicator(
-                          value: percentual,
-                          backgroundColor: categoria.cor.withOpacity(0.15),
-                          color: categoria.cor,
-                          minHeight: 10,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text("${(percentual * 100).toStringAsFixed(0)}%"),
-                  ],
-                ),
-              );
-            }),
             const SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
