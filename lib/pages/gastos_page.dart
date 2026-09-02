@@ -59,11 +59,16 @@ class _GastosPageState extends State<GastosPage> {
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.account_balance_wallet),
+           Icon(Icons.account_balance_wallet, color: Colors.white),
             SizedBox(width: 8),
             Text(
-              "Contador de Gastos",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              "Symple",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 22,
+                letterSpacing: 1.2,
+              ),
             ),
           ],
         ),
